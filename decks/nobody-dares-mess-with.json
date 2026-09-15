@@ -1,0 +1,87 @@
+{
+  "schemaVersion": 2,
+  "id": "nobody-dares-mess-with",
+  "iteration": 1,
+  "format": "paper-note",
+  "post": {
+    "description": "How to become the person nobody dares to mess with.",
+    "hashtags": ["stoicism", "discipline", "selfimprovement", "mindset", "masculinity"]
+  },
+  "tiles": [
+    { "role": "hook", "lines": ["How to become the person", "**nobody dares to mess with:**"] },
+    {
+      "role": "point",
+      "points": [
+        {
+          "number": 1,
+          "title": "Stop Explaining Yourself",
+          "body": [
+            { "kind": "paragraph", "hug": true, "text": "“I can't make it.”" },
+            { "kind": "paragraph", "text": "That's it. That's the whole sentence." },
+            { "kind": "paragraph", "text": "You don't owe anyone an explanation on why you're unavailable. The second you start over justifying your decisions, you're basically handing people the rope to argue with you." },
+            { "kind": "paragraph", "text": "Confident people say what they mean and keep it moving." }
+          ]
+        }
+      ]
+    },
+    {
+      "role": "point",
+      "points": [
+        {
+          "number": 2,
+          "title": "Master the Silence",
+          "body": [
+            { "kind": "lead", "hug": true, "text": "Here's what happens when someone disrespects you:" },
+            { "kind": "paragraph", "text": "Most people panic and immediately respond." },
+            { "kind": "paragraph", "text": "You? You pause. Three full seconds of silence. Watch them squirm. Watch them backtrack. That silence tells them everything you're not shaken, you're not scrambling for words, you're just… unbothered." },
+            { "kind": "paragraph", "text": "And that makes all the difference." }
+          ]
+        }
+      ]
+    },
+    {
+      "role": "point",
+      "points": [
+        {
+          "number": 3,
+          "title": "Guard Your Privacy",
+          "body": [
+            { "kind": "lead", "hug": true, "text": "Stop doing these 4 things:" },
+            {
+              "kind": "bullets",
+              "items": [
+                "Announcing your plans to everyone",
+                "Oversharing your struggles with randoms",
+                "Broadcasting your every move online",
+                "Telling people more than they need to know"
+              ]
+            },
+            { "kind": "paragraph", "text": "The more people know about what you're building, the more they can sabotage it. Move in silence. Let your results make the noise." }
+          ]
+        }
+      ]
+    },
+    {
+      "role": "point",
+      "points": [
+        {
+          "number": 4,
+          "title": "Build Undeniable Results",
+          "body": [
+            {
+              "kind": "lines",
+              "hug": true,
+              "lines": [
+                "Toxic workplace? You quit.",
+                "Shitty relationship? You leave.",
+                "Friends who disrespect you? Gone."
+              ]
+            },
+            { "kind": "paragraph", "text": "Once people see you're not bluffing, they either change or they're gone." },
+            { "kind": "paragraph", "text": "Cutting is the easy half. What you build after is slow and easy to miss. Use the Notice app to voice journal and track your growth." }
+          ]
+        }
+      ]
+    }
+  ]
+}

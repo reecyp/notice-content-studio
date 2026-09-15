@@ -1,0 +1,184 @@
+{
+  "schemaVersion": 2,
+  "id": "80-20-rule",
+  "iteration": 1,
+  "format": "paper-note",
+  "post": {
+    "description": "The 80/20 rule applied to life. Keep only these 5 things.",
+    "hashtags": [
+      "stoicism",
+      "discipline",
+      "selfimprovement",
+      "productivity",
+      "mindset"
+    ]
+  },
+  "tiles": [
+    {
+      "role": "hook",
+      "lines": [
+        "**The 80/20 rule applied to life:**",
+        "(keep only these 5 things)"
+      ]
+    },
+    {
+      "role": "point",
+      "points": [
+        {
+          "number": 1,
+          "title": "Morning routine",
+          "titleSub": "(first 60 minutes = entire day)",
+          "body": [
+            {
+              "kind": "lead",
+              "text": "Here's what helps:"
+            },
+            {
+              "kind": "bullets",
+              "items": [
+                "Wake up at 5:30 AM",
+                "Drink water immediately (you're dehydrated)",
+                "Move for 20 minutes (walk or stretch)",
+                "Avoid your phone until 7 AM"
+              ]
+            },
+            {
+              "kind": "paragraph",
+              "text": "Master your morning or it masters you. It's that straightforward."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "role": "point",
+      "points": [
+        {
+          "number": 2,
+          "title": "Health",
+          "titleSub": "(your foundation for everything)",
+          "body": [
+            {
+              "kind": "paragraph",
+              "text": "Exercise 4 days. Rest for 3. Simple as that."
+            },
+            {
+              "kind": "paragraph",
+              "text": "80% of fitness is consistency, not perfect routines."
+            },
+            {
+              "kind": "paragraph",
+              "text": "Sleep 8 hours gives more benefits than any supplement."
+            },
+            {
+              "kind": "paragraph",
+              "text": "Protein + vegetables covers most dietary needs."
+            },
+            {
+              "kind": "paragraph",
+              "text": "Skip complexity. Master the basics."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "role": "point",
+      "points": [
+        {
+          "number": 3,
+          "title": "Key relationships (5 people, not 500)",
+          "body": [
+            {
+              "kind": "paragraph",
+              "text": "A large network isn't required."
+            },
+            {
+              "kind": "lead",
+              "text": "You need:"
+            },
+            {
+              "kind": "bullets",
+              "items": [
+                "One mentor who's ahead",
+                "Two peers at your level for motivation",
+                "Two individuals you're helping"
+              ]
+            },
+            {
+              "kind": "paragraph",
+              "text": "This is your circle. Everything else is social media noise."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "role": "point",
+      "points": [
+        {
+          "number": 4,
+          "title": "Deep work (3 hours beats 10 hours)",
+          "body": [
+            {
+              "kind": "lead",
+              "text": "Here's the truth:"
+            },
+            {
+              "kind": "paragraph",
+              "text": "2-3 hours of deep, focused work beats a full day of \"busy work.\""
+            },
+            {
+              "kind": "paragraph",
+              "text": "Turn off your phone in 90-minute blocks."
+            },
+            {
+              "kind": "paragraph",
+              "text": "Work on one project until it's done."
+            },
+            {
+              "kind": "paragraph",
+              "text": "The person who finishes one task beats the person who starts ten."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "role": "point",
+      "points": [
+        {
+          "number": 5,
+          "title": "Mental clarity",
+          "titleSub": "(your headspace = your results)",
+          "body": [
+            {
+              "kind": "lead",
+              "text": "Every Sunday, do this:"
+            },
+            {
+              "kind": "lines",
+              "lines": [
+                "List 3 priorities for the week",
+                "Remove all other tasks",
+                "Most stress comes from overcommitting"
+              ]
+            },
+            {
+              "kind": "paragraph",
+              "text": "Decline good opportunities."
+            },
+            {
+              "kind": "paragraph",
+              "text": "Say yes only to the exceptional ones."
+            },
+            {
+              "kind": "paragraph",
+              "text": "Journaling is the most backed habit for a clearer mind; use Notice (voice journal)"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

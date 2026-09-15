@@ -1,0 +1,24 @@
+{
+  "name": "notice-content-studio",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev -p 3210",
+    "build": "next build",
+    "build:check": "NEXT_DIST_DIR=.next-check next build",
+    "start": "next start -p 3210",
+    "check": "tsc --noEmit && node scripts/check-fonts.mjs && node scripts/check-layout.mjs"
+  },
+  "dependencies": {
+    "@napi-rs/canvas": "^1.0.9",
+    "next": "15.5.4",
+    "react": "19.1.0",
+    "react-dom": "19.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "typescript": "^5.6"
+  }
+}

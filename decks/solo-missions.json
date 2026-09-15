@@ -1,0 +1,249 @@
+{
+  "schemaVersion": 2,
+  "id": "solo-missions",
+  "iteration": 1,
+  "format": "paper-note",
+  "post": {
+    "description": "8 solo missions that uncover who you actually are when nobody is watching.",
+    "hashtags": [
+      "stoicism",
+      "discipline",
+      "selfimprovement",
+      "solitude",
+      "mindset"
+    ]
+  },
+  "tiles": [
+    {
+      "role": "hook",
+      "lines": [
+        "**8 solo missions** that",
+        "uncover your true self:"
+      ]
+    },
+    {
+      "role": "point",
+      "points": [
+        {
+          "number": 1,
+          "title": "Fast for 24 hours",
+          "body": [
+            {
+              "kind": "paragraph",
+              "hug": true,
+              "text": "Hunger exposes who is in control."
+            },
+            {
+              "kind": "paragraph",
+              "text": "Your body will beg. Your mind will negotiate."
+            },
+            {
+              "kind": "paragraph",
+              "text": "Watch how quickly excuses appear."
+            },
+            {
+              "kind": "paragraph",
+              "text": "Discipline begins when you refuse them."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "role": "point",
+      "points": [
+        {
+          "number": 2,
+          "title": "Walk 20 miles in one day",
+          "body": [
+            {
+              "kind": "paragraph",
+              "hug": true,
+              "text": "No music. No podcasts. Just movement."
+            },
+            {
+              "kind": "paragraph",
+              "text": "Fatigue strips identity down to essentials."
+            },
+            {
+              "kind": "paragraph",
+              "text": "Thoughts rise and fall naturally."
+            },
+            {
+              "kind": "paragraph",
+              "text": "You learn how you speak to yourself under strain."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "role": "point",
+      "points": [
+        {
+          "number": 3,
+          "title": "Cut all sugar for 21 days",
+          "body": [
+            {
+              "kind": "paragraph",
+              "hug": true,
+              "text": "Cravings reveal dependency."
+            },
+            {
+              "kind": "paragraph",
+              "text": "Mood swings expose weak regulation."
+            },
+            {
+              "kind": "paragraph",
+              "text": "Energy stabilizes slowly."
+            },
+            {
+              "kind": "paragraph",
+              "text": "You realize how much pleasure controlled you."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "role": "point",
+      "points": [
+        {
+          "number": 4,
+          "title": "Sleep under the open sky",
+          "body": [
+            {
+              "kind": "paragraph",
+              "hug": true,
+              "text": "No walls. No roof. No comfort."
+            },
+            {
+              "kind": "paragraph",
+              "text": "The nervous system recalibrates fast."
+            },
+            {
+              "kind": "paragraph",
+              "text": "Fear passes. Awareness sharpens."
+            },
+            {
+              "kind": "paragraph",
+              "text": "You remember how small and alive you are."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "role": "point",
+      "points": [
+        {
+          "number": 5,
+          "title": "Wake up at 5 AM for 30 days",
+          "body": [
+            {
+              "kind": "paragraph",
+              "hug": true,
+              "text": "The world feels different before it wakes."
+            },
+            {
+              "kind": "paragraph",
+              "text": "Discipline compounds quietly here."
+            },
+            {
+              "kind": "paragraph",
+              "text": "Momentum builds without applause."
+            },
+            {
+              "kind": "paragraph",
+              "text": "You start trusting yourself again."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "role": "point",
+      "points": [
+        {
+          "number": 6,
+          "title": "Cold showers for 30 days",
+          "body": [
+            {
+              "kind": "paragraph",
+              "hug": true,
+              "text": "Shock resets your stress response."
+            },
+            {
+              "kind": "paragraph",
+              "text": "Resistance shows immediately."
+            },
+            {
+              "kind": "paragraph",
+              "text": "Breath becomes intentional."
+            },
+            {
+              "kind": "paragraph",
+              "text": "This trains calm under discomfort."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "role": "point",
+      "points": [
+        {
+          "number": 7,
+          "title": "Read a full book in one sitting",
+          "body": [
+            {
+              "kind": "paragraph",
+              "hug": true,
+              "text": "Attention span is tested brutally."
+            },
+            {
+              "kind": "paragraph",
+              "text": "Distraction urges surface."
+            },
+            {
+              "kind": "paragraph",
+              "text": "Focus deepens after the first hour."
+            },
+            {
+              "kind": "paragraph",
+              "text": "You relearn sustained presence."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "role": "point",
+      "points": [
+        {
+          "number": 8,
+          "title": "Keep a voice journal for 30 days",
+          "body": [
+            {
+              "kind": "paragraph",
+              "hug": true,
+              "text": "Thoughts stay vague until spoken."
+            },
+            {
+              "kind": "paragraph",
+              "text": "Patterns surface once they leave your head."
+            },
+            {
+              "kind": "paragraph",
+              "text": "The record outlives the mood."
+            },
+            {
+              "kind": "paragraph",
+              "text": "Notice is the app built for exactly this."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
