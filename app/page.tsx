@@ -49,6 +49,11 @@ export default async function Library({
           )}
         </div>
       )}
+
+      <div className="sitefoot">
+        <Link href="/terms">Terms of Service</Link>
+        <Link href="/privacy">Privacy Policy</Link>
+      </div>
     </main>
   );
 }

@@ -164,3 +164,44 @@ button.primary:hover:not(:disabled) { filter: brightness(1.08); }
   border-left-color: var(--warn);
   color: var(--warn);
 }
+
+/*
+ * The two policy pages. Prose at a comfortable measure, in the studio's own
+ * palette, since a TikTok reviewer follows these links from the app listing.
+ */
+.doc { max-width: 720px; }
+.doc .lede { font-size: 15px; line-height: 1.65; color: var(--ink); margin: 0 0 8px; }
+.doc h2 {
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--muted);
+  font-weight: 600;
+  margin: 32px 0 10px;
+}
+.doc p { font-size: 14.5px; line-height: 1.7; margin: 0 0 12px; color: #d6d2cb; }
+.doc ul { margin: 0 0 12px; padding-left: 20px; }
+.doc li { font-size: 14.5px; line-height: 1.7; margin-bottom: 6px; color: #d6d2cb; }
+.doc code {
+  font-family: ui-monospace, monospace;
+  font-size: 12.5px;
+  background: #232120;
+  padding: 1px 5px;
+  border-radius: 3px;
+}
+.doc a { color: var(--accent); text-decoration: none; }
+.doc a:hover { text-decoration: underline; }
+.doc .foot { margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--line); font-size: 13px; }
+
+/* Policy links, so the pages are reachable from the studio itself. */
+.sitefoot {
+  margin-top: 48px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+  display: flex;
+  gap: 16px;
+  font-size: 12.5px;
+  color: var(--muted);
+}
+.sitefoot a { color: var(--muted); text-decoration: none; }
+.sitefoot a:hover { color: var(--ink); }
