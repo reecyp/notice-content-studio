@@ -51,6 +51,19 @@ effect: only the browser that connected the account can publish, so the studio
 needs no login of its own. `/api/tile` stays open, because TikTok has to reach
 it unauthenticated.
 
+The price of that trade is that publishing needs a browser. A cron job, a
+webhook or a `curl` carries no cookie, so nothing server-initiated can post
+today — including a "send the next 10" endpoint. Moving the session into a
+table is what unlocks it; `docs/database.md` covers where that would sit.
+
+## What the ledger records
+
+Every send writes a row: which video (by uid), the publish id, the caption as
+it was at that moment, and what TikTok said when the pull settled. Because a
+publish id is a receipt rather than a result, `/api/tiktok/status` writes back
+on every check, and a failed pull puts the video back in the unsent queue. See
+`docs/database.md`.
+
 ## Limits worth knowing
 
 | | |

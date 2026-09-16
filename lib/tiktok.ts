@@ -7,9 +7,10 @@ import type { Deck } from './types';
  * Two things shape this file. First, TikTok will not accept photo bytes: a
  * photo post carries URLs, and TikTok pulls them from a domain the app has
  * proved it owns, which is why tiles are served by /api/tile rather than
- * uploaded. Second, the studio has no database, so the only thing that has to
- * survive between requests — the refresh token — lives in an encrypted cookie
- * on the one browser that authorized it.
+ * uploaded. Second, the refresh token lives in an encrypted cookie on the one
+ * browser that authorized it, rather than in the database, so the studio needs
+ * no login of its own. That is a deliberate trade and it has a price: nothing
+ * server-initiated can publish. See docs/database.md.
  */
 
 const AUTHORIZE = 'https://www.tiktok.com/v2/auth/authorize/';

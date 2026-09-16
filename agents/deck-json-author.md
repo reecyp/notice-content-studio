@@ -29,7 +29,8 @@ wrong even when the JSON validates.
    its slides onto the block grammar, nothing else.
 4. If you are remaking an existing deck, read the current `decks/<id>.json` and **bump
    `iteration`**. Exports are named `<id>-<NN>-v<iteration>.png`, so a forgotten bump silently
-   overwrites Reece's previous downloads.
+   overwrites Reece's previous downloads. Keep its `uid` exactly as it is: that is the deck's
+   identity in the send ledger, and changing it loses every send already recorded against it.
 
 ---
 
@@ -85,6 +86,7 @@ looks like a mistake, because it is one.
 {
   "schemaVersion": 2,
   "id": "nobody-dares-mess-with",
+  "uid": "a4636d51-fdfe-47e4-acc1-b1313bd76b21",
   "iteration": 1,
   "format": "paper-note",
   "post": {
@@ -97,6 +99,11 @@ looks like a mistake, because it is one.
 
 `post.description` and `post.hashtags` are the TikTok caption. Hashtags carry no `#`; the site adds
 it. Neither is ever drawn on a tile.
+
+`uid` is a UUID, written once per deck and never edited afterwards. For a new deck, generate one
+(`node -e "console.log(crypto.randomUUID())"`) or leave it out and run `npm run uid`, which stamps
+every deck that is missing one. It is what the database rows hang off, so a deck without it will
+not load.
 
 ---
 
@@ -340,6 +347,7 @@ letting the fit pass shrink it.
 
 ## 10. Before you hand it over
 
+- [ ] `uid` present, and unchanged if this deck already existed.
 - [ ] `iteration` bumped if this deck already existed.
 - [ ] Hook count matches the number of numbered points.
 - [ ] Hug is consistent across every tile in the deck.

@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import TileCanvas, { loadAssets } from './TileCanvas';
 import { CANVAS, exportName, paintTile, type TileLayout } from '@/lib/render';
+import type { SendState } from '@/lib/db';
 import type { Deck } from '@/lib/types';
 
 /** Repaints a tile on a detached canvas so export never depends on what is on screen. */
@@ -33,12 +34,18 @@ type PostState =
   | { kind: 'sent'; publishId: string; status: string; failReason?: string }
   | { kind: 'error'; message: string };
 
-export default function DeckViewer({ deck }: { deck: Deck }) {
+export default function DeckViewer({ deck, sent }: { deck: Deck; sent?: SendState | null }) {
   const [index, setIndex] = useState(0);
   const [layouts, setLayouts] = useState<Record<number, TileLayout>>({});
   const [busy, setBusy] = useState(false);
   const [copied, setCopied] = useState<string | null>(null);
-  const [post, setPost] = useState<PostState>({ kind: 'idle' });
+  // Seeded from the ledger, so a reload still knows what the last send was and
+  // the status of a pull can be checked hours later.
+  const [post, setPost] = useState<PostState>(
+    sent?.lastPublishId
+      ? { kind: 'sent', publishId: sent.lastPublishId, status: sent.lastStatus ?? 'PROCESSING' }
+      : { kind: 'idle' },
+  );
   const stripRef = useRef<HTMLDivElement>(null);
 
   const tile = deck.tiles[index];
@@ -213,6 +220,20 @@ export default function DeckViewer({ deck }: { deck: Deck }) {
             Sends all {count} tiles as a photo carousel. TikTok pulls the images and notifies you
             to finish the post in the app.
           </p>
+          {sent && (
+            <p style={{ fontSize: 13, margin: '0 0 10px' }}>
+              {sent.sentAt ? (
+                <>
+                  Sent {new Date(sent.sentAt).toLocaleString('en-GB')}
+                  {sent.sendCount > 1 ? ` · ${sent.sendCount} sends` : ''}
+                </>
+              ) : (
+                <span style={{ color: 'var(--muted)' }}>
+                  Not sent yet{sent.sendCount > 0 ? ` · ${sent.sendCount} failed attempt${sent.sendCount === 1 ? '' : 's'}` : ''}
+                </span>
+              )}
+            </p>
+          )}
           <button
             className="primary"
             onClick={sendToTikTok}
@@ -247,6 +268,8 @@ export default function DeckViewer({ deck }: { deck: Deck }) {
           <dl>
             <dt>id</dt>
             <dd>{deck.id}</dd>
+            <dt>uid</dt>
+            <dd style={{ fontSize: 11, wordBreak: 'break-all' }}>{deck.uid}</dd>
             <dt>iteration</dt>
             <dd>v{deck.iteration}</dd>
             <dt>tiles</dt>

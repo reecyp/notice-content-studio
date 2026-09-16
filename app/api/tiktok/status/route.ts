@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { settleSend } from '@/lib/db';
 import { TOKEN_COOKIE, TikTokError, config, freshen, postStatus, unseal } from '@/lib/tiktok';
 
 export const runtime = 'nodejs';
@@ -24,7 +25,11 @@ export async function GET(req: Request) {
     if (!session) return NextResponse.json({ error: 'not connected to TikTok' }, { status: 401 });
 
     const { session: live } = await freshen(cfg, session);
-    return NextResponse.json(await postStatus(live.accessToken, publishId));
+    const result = await postStatus(live.accessToken, publishId);
+    // Every check writes back, so the ledger learns the outcome of a pull that
+    // finished long after the tab that started it was closed.
+    await settleSend(publishId, result.status, result.failReason);
+    return NextResponse.json(result);
   } catch (e) {
     return NextResponse.json(
       { error: e instanceof Error ? e.message : String(e), logId: e instanceof TikTokError ? e.logId : undefined },

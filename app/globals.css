@@ -6,6 +6,7 @@
   --muted: #8f8a80;
   --accent: #c9a227;
   --warn: #d97757;
+  --ok: #6f9e6a;
   color-scheme: dark;
 }
 
@@ -41,6 +42,7 @@ a { color: inherit; }
 .card:hover { border-color: #4a463f; }
 .card h2 { margin: 0 0 6px; font-size: 15px; font-weight: 600; }
 .card .meta { color: var(--muted); font-size: 12.5px; }
+.card .row { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 8px; }
 .card.bad { border-color: #5c3a30; }
 .card.bad .meta { color: var(--warn); }
 
@@ -205,3 +207,18 @@ button.primary:hover:not(:disabled) { filter: brightness(1.08); }
 }
 .sitefoot a { color: var(--muted); text-decoration: none; }
 .sitefoot a:hover { color: var(--ink); }
+
+/* Send state, from the ledger. Absent entirely when there is no DATABASE_URL. */
+.pill {
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: 20px;
+  border: 1px solid var(--line);
+  color: var(--muted);
+  white-space: nowrap;
+}
+.pill.sent { color: var(--ok); border-color: #35452f; }
+.pill.pending { color: var(--accent); border-color: #4a3f1c; }
+.pill.failed { color: var(--warn); border-color: #5c3a30; }

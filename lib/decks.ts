@@ -12,6 +12,7 @@ const fail = (where: string, msg: string): never => {
 };
 
 const isStr = (v: unknown): v is string => typeof v === 'string';
+const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const strArray = (v: unknown, where: string): string[] => {
   if (!Array.isArray(v) || !v.every(isStr)) fail(where, 'expected an array of strings');
   return v as string[];
@@ -116,6 +117,11 @@ export function parseDeck(raw: unknown, filename: string): Deck {
   if (!isStr(d.id)) return fail(filename, 'id is required');
   const expected = path.basename(filename, '.json');
   if (d.id !== expected) fail(filename, `id "${d.id}" does not match the filename "${expected}"`);
+  if (!isStr(d.uid) || !UUID.test(d.uid)) {
+    // Stamped once and never edited: it is the row the send log hangs off, so a
+    // deck without one is invisible to the queue rather than merely unlabelled.
+    fail(filename, 'uid must be a UUID. Run `npm run uid` to stamp any deck missing one.');
+  }
   if (typeof d.iteration !== 'number' || d.iteration < 1) {
     return fail(filename, 'iteration must be an integer of 1 or more');
   }
@@ -133,6 +139,7 @@ export function parseDeck(raw: unknown, filename: string): Deck {
   return {
     schemaVersion: 2,
     id: d.id,
+    uid: (d.uid as string).toLowerCase(),
     iteration: d.iteration,
     format: 'paper-note',
     post,

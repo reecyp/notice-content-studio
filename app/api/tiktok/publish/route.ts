@@ -1,8 +1,10 @@
 import { NextResponse } from 'next/server';
 import { loadDeck } from '@/lib/decks';
+import { recordFailedSend, recordSend } from '@/lib/db';
 import {
   TOKEN_COOKIE,
   TikTokError,
+  caption,
   config,
   freshen,
   seal,
@@ -54,6 +56,10 @@ export async function POST(req: Request) {
     const { session: live, changed } = await freshen(cfg, session);
     const { publishId, urls } = await sendToDrafts(cfg, live.accessToken, loaded.deck);
 
+    // The post exists now. Logging it must not be able to undo that, so
+    // recordSend swallows its own failures rather than throwing into this try.
+    await recordSend(loaded.deck, { publishId, caption: caption(loaded.deck) });
+
     const res = NextResponse.json({ publishId, tiles: urls.length, urls });
     // Refresh tokens rotate; a spent one has to be replaced or the next
     // publish is the one that fails.
@@ -69,6 +75,10 @@ export async function POST(req: Request) {
     return res;
   } catch (e) {
     const status = e instanceof TikTokError ? 502 : 500;
+    await recordFailedSend(loaded.deck, {
+      error: e instanceof Error ? e.message : String(e),
+      logId: e instanceof TikTokError ? e.logId : undefined,
+    });
     return NextResponse.json(
       { error: e instanceof Error ? e.message : String(e), logId: e instanceof TikTokError ? e.logId : undefined },
       { status },

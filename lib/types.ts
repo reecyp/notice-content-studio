@@ -29,6 +29,11 @@ export type Tile =
 export type Deck = {
   schemaVersion: 2;
   id: string;
+  /**
+   * The stable identity of this video across every remake, rename and platform.
+   * The database keys off it; nothing else in the render path reads it.
+   */
+  uid: string;
   iteration: number;
   format: 'paper-note';
   post?: { description?: string; hashtags?: string[] };

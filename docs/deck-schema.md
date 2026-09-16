@@ -26,6 +26,7 @@ line. Derived by measuring the published tiles in `Notice-media/reel-slideshows/
 {
   "schemaVersion": 2,
   "id": "solo-missions",
+  "uid": "26689d75-3f94-4413-a476-fa553356697b",
   "iteration": 1,
   "format": "paper-note",
   "post": {
@@ -40,6 +41,7 @@ line. Derived by measuring the published tiles in `Notice-media/reel-slideshows/
 |---|---|---|
 | `schemaVersion` | yes | `2`. Lets the site refuse a file it does not understand. |
 | `id` | yes | kebab-case, matches the filename. Drives export filenames and the library list. |
+| `uid` | yes | UUID. Stamped once by `npm run uid` and then never edited: it is the deck's identity in the send ledger, so it survives a rename or a remake while `id` and `iteration` do not. See `docs/database.md`. |
 | `iteration` | yes | Integer, starts at `1`. Bump on every remake so a redo's downloads never overwrite the previous cut. Filename: `<id>-<NN>-v<iteration>.png`. |
 | `format` | yes | `"paper-note"`. Only value for now; present so a second format is additive. |
 | `post.description` | no | TikTok caption. Plain text, no hashtags inside it. |
@@ -336,6 +338,7 @@ looks subtly wrong. Run both with `npm run check`.
 {
   "schemaVersion": 2,
   "id": "nobody-dares-mess-with",
+  "uid": "a4636d51-fdfe-47e4-acc1-b1313bd76b21",
   "iteration": 1,
   "format": "paper-note",
   "post": {
