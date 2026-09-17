@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 2,
+  "id": "test-08",
+  "uid": "274eef99-b52e-46b9-b687-2fff69fb1d20",
+  "createdAt": "2026-09-08",
+  "iteration": 1,
+  "format": "paper-note",
+  "post": {
+    "description": "Test deck 08 of 10. Batch send check, not for posting.",
+    "hashtags": [
+      "test"
+    ]
+  },
+  "tiles": [
+    {
+      "role": "hook",
+      "lines": [
+        "Test deck 08 of 10",
+        "**friends:**"
+      ]
+    },
+    {
+      "role": "point",
+      "points": [
+        {
+          "number": 1,
+          "title": "Friends",
+          "titleSub": "(Two hours a week that are not on a screen)",
+          "body": [
+            {
+              "kind": "paragraph",
+              "text": "You pick the day and you send the message first. Waiting to be invited is how a year goes by."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "role": "closer",
+      "title": "This is a test deck",
+      "body": [
+        {
+          "kind": "paragraph",
+          "text": "It exists to check that the batch endpoint sends ten decks to TikTok in one call. Delete it when that is confirmed."
+        }
+      ]
+    }
+  ]
+}

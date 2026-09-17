@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 2,
+  "id": "test-03",
+  "uid": "92debe1f-3785-450d-9355-77d247f23fc5",
+  "createdAt": "2026-09-03",
+  "iteration": 1,
+  "format": "paper-note",
+  "post": {
+    "description": "Test deck 03 of 10. Batch send check, not for posting.",
+    "hashtags": [
+      "test"
+    ]
+  },
+  "tiles": [
+    {
+      "role": "hook",
+      "lines": [
+        "Test deck 03 of 10",
+        "**saying no:**"
+      ]
+    },
+    {
+      "role": "point",
+      "points": [
+        {
+          "number": 1,
+          "title": "Saying no",
+          "titleSub": "(One sentence, no explanation attached)",
+          "body": [
+            {
+              "kind": "paragraph",
+              "text": "“I cannot make it.” That is the whole reply. The urge to justify it is the part that costs you the evening."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "role": "closer",
+      "title": "This is a test deck",
+      "body": [
+        {
+          "kind": "paragraph",
+          "text": "It exists to check that the batch endpoint sends ten decks to TikTok in one call. Delete it when that is confirmed."
+        }
+      ]
+    }
+  ]
+}

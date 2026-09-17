@@ -136,8 +136,12 @@ check('no key at all is turned away',
 await connect();
 
 console.log('\nthe batch is all or nothing');
+// One more than the queue holds, and never more than the cap: asking over the
+// cap is a 400, which would pass for the wrong reason as the repo grows decks.
+const OVER = DECKS.length + 1;
+check('the fixture fits inside one batch', OVER <= 20, `${DECKS.length} decks on disk`);
 {
-  const [code, body] = await json(await send({ count: DECKS.length + 5 }));
+  const [code, body] = await json(await send({ count: OVER }));
   check('a short queue sends nothing', code === 409 && body.available === DECKS.length, JSON.stringify(body));
   check('a refused batch called TikTok zero times', tiktok.init === 0);
 }

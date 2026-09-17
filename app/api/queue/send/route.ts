@@ -95,7 +95,11 @@ async function ready(req: Request, url: URL) {
 
   const stored = await loadSession();
   const session = unseal(stored?.sealed, cfg.clientSecret);
-  return { cfg, session, connectedAt: stored?.updatedAt ?? null };
+  // A stored row that will not unseal is its own diagnosis, and a different one
+  // from having no row at all: the seal key is TIKTOK_CLIENT_SECRET, so it means
+  // the secret in this environment is not the one that sealed the session.
+  const sessionState = !stored ? 'none' : session ? 'ok' : 'unreadable';
+  return { cfg, session, sessionState, connectedAt: stored?.updatedAt ?? null };
 }
 
 /**
@@ -113,6 +117,7 @@ export async function GET(req: Request) {
 
   return NextResponse.json({
     connected: Boolean(state.session),
+    session: state.sessionState,
     connectedAt: state.connectedAt,
     queued: await unsentCount(),
     ready: queue.length,
@@ -135,8 +140,12 @@ export async function POST(req: Request) {
     return NextResponse.json(
       {
         error:
-          'no TikTok account is stored on the server. Open /api/tiktok/auth in a browser once ' +
-          'to connect it; the studio keeps the refresh token for a year.',
+          state.sessionState === 'unreadable'
+            ? 'a TikTok session is stored but this environment cannot unseal it. The seal key is ' +
+              'TIKTOK_CLIENT_SECRET, so it does not match the one that connected the account.'
+            : 'no TikTok account is stored on the server. Open /api/tiktok/auth in a browser once ' +
+              'to connect it; the studio keeps the refresh token for a year.',
+        session: state.sessionState,
         connect: '/api/tiktok/auth',
       },
       { status: 409 },

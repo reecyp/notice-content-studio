@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 2,
+  "id": "test-02",
+  "uid": "0e0de8f0-4938-4b38-ba52-8dcaffcbc913",
+  "createdAt": "2026-09-02",
+  "iteration": 1,
+  "format": "paper-note",
+  "post": {
+    "description": "Test deck 02 of 10. Batch send check, not for posting.",
+    "hashtags": [
+      "test"
+    ]
+  },
+  "tiles": [
+    {
+      "role": "hook",
+      "lines": [
+        "Test deck 02 of 10",
+        "**walking:**"
+      ]
+    },
+    {
+      "role": "point",
+      "points": [
+        {
+          "number": 1,
+          "title": "Walking",
+          "titleSub": "(Thirty minutes outside before you open a screen)",
+          "body": [
+            {
+              "kind": "paragraph",
+              "text": "No podcast and no music. Just the walk. Most of what you were stuck on at midnight has an answer by the time you get back."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "role": "closer",
+      "title": "This is a test deck",
+      "body": [
+        {
+          "kind": "paragraph",
+          "text": "It exists to check that the batch endpoint sends ten decks to TikTok in one call. Delete it when that is confirmed."
+        }
+      ]
+    }
+  ]
+}

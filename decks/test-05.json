@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 2,
+  "id": "test-05",
+  "uid": "1419848c-9477-4b82-a8ee-1939a0b89b17",
+  "createdAt": "2026-09-05",
+  "iteration": 1,
+  "format": "paper-note",
+  "post": {
+    "description": "Test deck 05 of 10. Batch send check, not for posting.",
+    "hashtags": [
+      "test"
+    ]
+  },
+  "tiles": [
+    {
+      "role": "hook",
+      "lines": [
+        "Test deck 05 of 10",
+        "**reading:**"
+      ]
+    },
+    {
+      "role": "point",
+      "points": [
+        {
+          "number": 1,
+          "title": "Reading",
+          "titleSub": "(Ten pages before anything else)",
+          "body": [
+            {
+              "kind": "paragraph",
+              "text": "The book sits on the pillow so you cannot get into bed without moving it. Ten pages is four minutes and it ends the day differently."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "role": "closer",
+      "title": "This is a test deck",
+      "body": [
+        {
+          "kind": "paragraph",
+          "text": "It exists to check that the batch endpoint sends ten decks to TikTok in one call. Delete it when that is confirmed."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 2,
+  "id": "test-01",
+  "uid": "b06a8613-d826-4a4d-94b7-63c0afcd453b",
+  "createdAt": "2026-09-01",
+  "iteration": 1,
+  "format": "paper-note",
+  "post": {
+    "description": "Test deck 01 of 10. Batch send check, not for posting.",
+    "hashtags": [
+      "test"
+    ]
+  },
+  "tiles": [
+    {
+      "role": "hook",
+      "lines": [
+        "Test deck 01 of 10",
+        "**sleep:**"
+      ]
+    },
+    {
+      "role": "point",
+      "points": [
+        {
+          "number": 1,
+          "title": "Sleep",
+          "titleSub": "(Going to bed at the same time every night)",
+          "body": [
+            {
+              "kind": "paragraph",
+              "text": "Your phone charges in the kitchen. You are in bed by eleven. You wake up without an alarm inside two weeks."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "role": "closer",
+      "title": "This is a test deck",
+      "body": [
+        {
+          "kind": "paragraph",
+          "text": "It exists to check that the batch endpoint sends ten decks to TikTok in one call. Delete it when that is confirmed."
+        }
+      ]
+    }
+  ]
+}

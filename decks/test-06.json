@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 2,
+  "id": "test-06",
+  "uid": "7128156d-6c77-496a-bf3f-347cf6d9abe8",
+  "createdAt": "2026-09-06",
+  "iteration": 1,
+  "format": "paper-note",
+  "post": {
+    "description": "Test deck 06 of 10. Batch send check, not for posting.",
+    "hashtags": [
+      "test"
+    ]
+  },
+  "tiles": [
+    {
+      "role": "hook",
+      "lines": [
+        "Test deck 06 of 10",
+        "**training:**"
+      ]
+    },
+    {
+      "role": "point",
+      "points": [
+        {
+          "number": 1,
+          "title": "Training",
+          "titleSub": "(Turning up on the days you do not want to)",
+          "body": [
+            {
+              "kind": "paragraph",
+              "text": "The session you do at sixty percent on a bad day counts more than the one you skip and plan to make up on Sunday."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "role": "closer",
+      "title": "This is a test deck",
+      "body": [
+        {
+          "kind": "paragraph",
+          "text": "It exists to check that the batch endpoint sends ten decks to TikTok in one call. Delete it when that is confirmed."
+        }
+      ]
+    }
+  ]
+}

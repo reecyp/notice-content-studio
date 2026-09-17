@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 2,
+  "id": "test-10",
+  "uid": "5bfb0c45-58d2-40e0-adf5-e4b34f1293f5",
+  "createdAt": "2026-09-10",
+  "iteration": 1,
+  "format": "paper-note",
+  "post": {
+    "description": "Test deck 10 of 10. Batch send check, not for posting.",
+    "hashtags": [
+      "test"
+    ]
+  },
+  "tiles": [
+    {
+      "role": "hook",
+      "lines": [
+        "Test deck 10 of 10",
+        "**mornings:**"
+      ]
+    },
+    {
+      "role": "point",
+      "points": [
+        {
+          "number": 1,
+          "title": "Mornings",
+          "titleSub": "(The first hour belongs to you)",
+          "body": [
+            {
+              "kind": "paragraph",
+              "text": "Water, light, and no input. Whatever you let in during that hour sets the terms for the next fourteen."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "role": "closer",
+      "title": "This is a test deck",
+      "body": [
+        {
+          "kind": "paragraph",
+          "text": "It exists to check that the batch endpoint sends ten decks to TikTok in one call. Delete it when that is confirmed."
+        }
+      ]
+    }
+  ]
+}

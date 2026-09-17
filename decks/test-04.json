@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 2,
+  "id": "test-04",
+  "uid": "c8ca02e6-d925-47ea-a8b4-b217b22bd26f",
+  "createdAt": "2026-09-04",
+  "iteration": 1,
+  "format": "paper-note",
+  "post": {
+    "description": "Test deck 04 of 10. Batch send check, not for posting.",
+    "hashtags": [
+      "test"
+    ]
+  },
+  "tiles": [
+    {
+      "role": "hook",
+      "lines": [
+        "Test deck 04 of 10",
+        "**money:**"
+      ]
+    },
+    {
+      "role": "point",
+      "points": [
+        {
+          "number": 1,
+          "title": "Money",
+          "titleSub": "(Knowing the number you actually spend)",
+          "body": [
+            {
+              "kind": "paragraph",
+              "text": "Open the app once a week and read every line. Fifteen minutes. The discomfort of looking is smaller than the discomfort of not knowing."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "role": "closer",
+      "title": "This is a test deck",
+      "body": [
+        {
+          "kind": "paragraph",
+          "text": "It exists to check that the batch endpoint sends ten decks to TikTok in one call. Delete it when that is confirmed."
+        }
+      ]
+    }
+  ]
+}

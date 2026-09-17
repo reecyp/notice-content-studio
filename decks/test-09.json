@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 2,
+  "id": "test-09",
+  "uid": "d36579d8-10ad-4845-9ad7-62d8ac994cfe",
+  "createdAt": "2026-09-09",
+  "iteration": 1,
+  "format": "paper-note",
+  "post": {
+    "description": "Test deck 09 of 10. Batch send check, not for posting.",
+    "hashtags": [
+      "test"
+    ]
+  },
+  "tiles": [
+    {
+      "role": "hook",
+      "lines": [
+        "Test deck 09 of 10",
+        "**work:**"
+      ]
+    },
+    {
+      "role": "point",
+      "points": [
+        {
+          "number": 1,
+          "title": "Work",
+          "titleSub": "(One task before you open anything else)",
+          "body": [
+            {
+              "kind": "paragraph",
+              "text": "The hardest thing on the list, started at nine, before email. It takes forty minutes and the rest of the day stops being a negotiation."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "role": "closer",
+      "title": "This is a test deck",
+      "body": [
+        {
+          "kind": "paragraph",
+          "text": "It exists to check that the batch endpoint sends ten decks to TikTok in one call. Delete it when that is confirmed."
+        }
+      ]
+    }
+  ]
+}

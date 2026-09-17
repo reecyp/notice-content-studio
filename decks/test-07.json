@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 2,
+  "id": "test-07",
+  "uid": "fd5ade51-b95c-472d-b52b-39811cb2d8a2",
+  "createdAt": "2026-09-07",
+  "iteration": 1,
+  "format": "paper-note",
+  "post": {
+    "description": "Test deck 07 of 10. Batch send check, not for posting.",
+    "hashtags": [
+      "test"
+    ]
+  },
+  "tiles": [
+    {
+      "role": "hook",
+      "lines": [
+        "Test deck 07 of 10",
+        "**silence:**"
+      ]
+    },
+    {
+      "role": "point",
+      "points": [
+        {
+          "number": 1,
+          "title": "Silence",
+          "titleSub": "(An hour a day with nothing playing)",
+          "body": [
+            {
+              "kind": "paragraph",
+              "text": "No headphones on the walk and no show during dinner. The first three days feel long. After that the noise is what feels strange."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "role": "closer",
+      "title": "This is a test deck",
+      "body": [
+        {
+          "kind": "paragraph",
+          "text": "It exists to check that the batch endpoint sends ten decks to TikTok in one call. Delete it when that is confirmed."
+        }
+      ]
+    }
+  ]
+}
