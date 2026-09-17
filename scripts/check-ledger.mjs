@@ -175,7 +175,11 @@ const out = execFileSync(process.execPath, [
   "await db.saveSession('sealed');" +
   "console.log(db.hasDb(), (await db.nextUnsent(5)).length, (await db.sendStates()).size," +
   "  await db.unsentCount(), await db.loadSession());",
-], { env, encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }).trim();
+], { env, encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] })
+  // The child inspects its own values, and colours them when the environment
+  // says to. Compare the values, not the escape codes.
+  .replace(/\u001b\[[0-9;]*m/g, '')
+  .trim();
 // The batch endpoint reads loadSession to decide whether it may post at all, so
 // no database has to read as "not connected" rather than as anything else.
 check('every call is a no-op with no DATABASE_URL', out === 'false 0 0 0 null', out);

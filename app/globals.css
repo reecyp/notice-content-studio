@@ -222,3 +222,80 @@ button.primary:hover:not(:disabled) { filter: brightness(1.08); }
 .pill.sent { color: var(--ok); border-color: #35452f; }
 .pill.pending { color: var(--accent); border-color: #4a3f1c; }
 .pill.failed { color: var(--warn); border-color: #5c3a30; }
+
+/*
+ * The log. A queue, a send history and a failure list, which are three readings
+ * of the same ledger and so share one table rather than three treatments.
+ */
+.masthead .log-link { margin-left: auto; }
+
+.tabs { display: flex; gap: 6px; margin-bottom: 18px; }
+.tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 13px;
+  color: var(--muted);
+  text-decoration: none;
+  padding: 7px 13px;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: var(--panel);
+}
+.tab:hover { border-color: #4a463f; color: var(--ink); }
+.tab.on { color: var(--ink); border-color: #4a463f; background: #232120; }
+.tab .n {
+  font-variant-numeric: tabular-nums;
+  font-size: 11.5px;
+  color: var(--muted);
+  background: #2a2723;
+  border-radius: 20px;
+  padding: 1px 7px;
+}
+.tab.on .n { color: var(--accent); }
+
+.filter { display: flex; align-items: flex-end; gap: 10px; flex-wrap: wrap; margin-bottom: 18px; }
+.filter label { display: flex; align-items: center; gap: 7px; font-size: 12.5px; color: var(--muted); }
+.filter input[type='date'] {
+  font: inherit;
+  font-size: 13px;
+  color: var(--ink);
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  padding: 6px 10px;
+}
+.filter input[type='date']:focus { outline: none; border-color: #4a463f; }
+.filter .clear { font-size: 12.5px; color: var(--muted); text-decoration: none; padding: 7px 4px; }
+.filter .clear:hover { color: var(--ink); }
+
+.hint { color: var(--muted); font-size: 12.5px; margin: 0 0 14px; }
+.hint a { color: var(--accent); text-decoration: none; }
+.hint a:hover { text-decoration: underline; }
+
+.table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+.table th {
+  text-align: left;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--muted);
+  font-weight: 600;
+  padding: 0 14px 8px 0;
+  border-bottom: 1px solid var(--line);
+}
+.table td { padding: 12px 14px 12px 0; border-bottom: 1px solid #211f1d; vertical-align: top; }
+.table tr:hover td { background: #191816; }
+.table .num { text-align: right; width: 1%; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.table th.num { padding-right: 14px; }
+.table .when { white-space: nowrap; color: #c3bfb7; font-variant-numeric: tabular-nums; width: 1%; }
+.table .muted { color: var(--muted); }
+/* Where the next batch stops and the rest of the queue begins. */
+.table tr.rule td { border-top: 1px dashed #43403a; }
+.table .deck { display: block; font-weight: 600; color: var(--ink); text-decoration: none; }
+.table .deck:hover { color: var(--accent); }
+.table .deck.gone { color: var(--muted); }
+.table .meta { display: block; color: var(--muted); font-size: 12px; margin-top: 3px; }
+.table .why { color: var(--warn); max-width: 460px; }
+.table .id { font-family: ui-monospace, monospace; font-size: 11.5px; color: var(--muted); }
+.table .pill { display: inline-block; }

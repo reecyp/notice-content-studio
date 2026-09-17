@@ -27,6 +27,11 @@ export default async function Library({
           {decks.length} deck{decks.length === 1 ? '' : 's'} in /decks
           {hasDb() && ` · ${unsent} unsent`}
         </span>
+        {hasDb() && (
+          <Link className="back log-link" href="/log">
+            Log →
+          </Link>
+        )}
       </div>
 
       {banner.tiktok === 'connected' && (

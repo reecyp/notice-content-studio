@@ -117,6 +117,38 @@ things that used to gate it are answered here:
 - **TikTok allows 6 requests per minute per access token.** Ten decks is ten init calls, so the
   endpoint sleeps 10.5 seconds between them rather than firing in parallel.
 
+## Reading it back: /log
+
+`/log` is the ledger read three ways, one tab each, 50 rows a tab.
+
+```ts
+await queuePage({ from, to }, 50);       // { rows: QueueRow[],   total }
+await attemptsPage('sent',   {}, 50);    // { rows: AttemptRow[], total }
+await attemptsPage('failed', {}, 50);    // { rows: AttemptRow[], total }
+await retryPending();                    // unsent decks that have been tried
+```
+
+Three things about them are decisions rather than details.
+
+**The tabs are not a partition of `nextUnsent`.** A failed send clears `sent_at`, so a failed deck
+is an unsent deck and the batch endpoint will pick it up again. On the log it belongs under Failed,
+because a deck sitting in the queue with no mark on it reads as one that has never been tried. So
+`queuePage` asks for videos with no `send` row at all, and `retryPending` counts the ones held
+back, for the line on the queue tab that says where they went. Order still matches `nextUnsent`
+exactly, because the queue tab is a picture of that queue.
+
+**One row per attempt, not per deck.** A deck that failed and then went out is two events, and
+collapsing them into a latest status hides the one worth seeing.
+
+**`total` rides along on the rows** as `count(*) over ()`. A page that shows 50 of 137 has to say
+so, or a cap reads as the whole story; putting it on the rows keeps a tab to one round trip.
+
+The date filter is a round trip rather than a filter over the 50 already loaded — otherwise "the
+50 most recent" and "in this range" would quietly compose into "the 50 most recent, minus the ones
+outside the range". Both ends are inclusive of their own day, in the database's time zone. The
+queue tab filters on `made_at`, the deck's own `createdAt`; Sent and Failed filter on when the
+attempt was made.
+
 ## Checking it
 
 `npm run check:db` runs `lib/db.ts` against a real Postgres — PGlite, in process — by standing in

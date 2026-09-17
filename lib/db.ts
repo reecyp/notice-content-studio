@@ -356,6 +356,178 @@ export async function sendLog(limit = 50): Promise<SendLogEntry[]> {
 }
 
 // ---------------------------------------------------------------------------
+// The log page
+// ---------------------------------------------------------------------------
+
+/**
+ * A filter on whole days, inclusive at both ends, as `/log` supplies it.
+ *
+ * Either end may be absent, which means unbounded on that side. The comparison
+ * happens in the database's time zone, so a day here is the server's day.
+ */
+export type DayRange = { from?: string | null; to?: string | null };
+
+/**
+ * A slice of the log, and the size of the thing it was cut from.
+ *
+ * `total` is what makes a truncated page honest: the page shows 50 rows and
+ * says how many matched, rather than letting a capped list read as the whole
+ * story. It comes back on the rows themselves, so a page is one round trip.
+ */
+export type LogPage<T> = { rows: T[]; total: number };
+
+const LOG_LIMIT = (n: number) => Math.max(1, Math.min(200, Math.trunc(n)));
+
+/** `count(*) over ()`, which is absent exactly when there are no rows. */
+const totalOf = (rows: Record<string, unknown>[]) => Number(rows[0]?.total ?? 0);
+
+export type QueueRow = {
+  uid: string;
+  deckId: string;
+  iteration: number;
+  tileCount: number;
+  madeAt: string | null;
+};
+
+/**
+ * The decks waiting to go out, in the order they will go.
+ *
+ * Deliberately narrower than `nextUnsent`: a deck whose send failed is unsent
+ * too, and the batch endpoint will pick it up again, but on the log it belongs
+ * under Failed rather than sitting in the queue looking untouched. So this asks
+ * for the videos that have never been handed to TikTok at all, and
+ * `retryPending` counts the ones held back, for the line that says so.
+ *
+ * Order matches `nextUnsent` because it has to: this is a picture of that
+ * queue, and a picture that sorts differently is a picture of something else.
+ */
+export async function queuePage(range: DayRange = {}, limit = 50): Promise<LogPage<QueueRow>> {
+  const sql = db();
+  if (!sql) return { rows: [], total: 0 };
+  const { from = null, to = null } = range;
+  return safely(
+    'queuePage',
+    async () => {
+      const rows = (await sql`
+        select v.uid, v.deck_id, v.iteration, v.tile_count, v.made_at,
+               count(*) over () as total
+        from video v
+        where v.sent_at is null
+          and not exists (select 1 from send where video_uid = v.uid)
+          and (${from}::date is null or v.made_at >= ${from}::date)
+          and (${to}::date is null or v.made_at < ${to}::date + 1)
+        order by v.made_at asc nulls last, v.deck_id asc
+        limit ${LOG_LIMIT(limit)}
+      `) as Record<string, unknown>[];
+      return {
+        total: totalOf(rows),
+        rows: rows.map((r) => ({
+          uid: String(r.uid),
+          deckId: String(r.deck_id),
+          iteration: Number(r.iteration),
+          tileCount: Number(r.tile_count ?? 0),
+          madeAt: r.made_at ? String(r.made_at) : null,
+        })),
+      };
+    },
+    { rows: [], total: 0 },
+  );
+}
+
+/**
+ * Unsent decks that have been tried before.
+ *
+ * The queue tab leaves these out, so it owes the reader a count of them.
+ */
+export async function retryPending(): Promise<number> {
+  const sql = db();
+  if (!sql) return 0;
+  return safely(
+    'retryPending',
+    async () => {
+      const rows = (await sql`
+        select count(*)::int as n
+        from video v
+        where v.sent_at is null
+          and exists (select 1 from send where video_uid = v.uid)
+      `) as Record<string, unknown>[];
+      return Number(rows[0]?.n ?? 0);
+    },
+    0,
+  );
+}
+
+export type AttemptRow = {
+  id: number;
+  uid: string;
+  deckId: string;
+  platform: string;
+  publishId: string | null;
+  status: string;
+  error: string | null;
+  /** Snapshotted at send time, so it is what actually went out. */
+  iteration: number;
+  tileCount: number | null;
+  /** When it was handed to TikTok. The date the Sent and Failed tabs filter on. */
+  createdAt: string;
+  settledAt: string | null;
+  madeAt: string | null;
+};
+
+/**
+ * Send attempts, newest first, split by how they ended.
+ *
+ * One row per attempt rather than per deck: a deck that failed and then went
+ * out is two different events, and collapsing them hides the one worth seeing.
+ * `outcome` splits the log in two because the page shows them as two tabs, and
+ * FAILED is the only status that is not some stage of success in flight.
+ */
+export async function attemptsPage(
+  outcome: 'sent' | 'failed',
+  range: DayRange = {},
+  limit = 50,
+): Promise<LogPage<AttemptRow>> {
+  const sql = db();
+  if (!sql) return { rows: [], total: 0 };
+  const { from = null, to = null } = range;
+  const failed = outcome === 'failed';
+  return safely(
+    'attemptsPage',
+    async () => {
+      const rows = (await sql`
+        select s.id, s.video_uid, v.deck_id, v.made_at, s.platform, s.publish_id,
+               s.status, s.error, s.iteration, s.tile_count, s.created_at, s.settled_at,
+               count(*) over () as total
+        from send s join video v on v.uid = s.video_uid
+        where (s.status = 'FAILED') = ${failed}::boolean
+          and (${from}::date is null or s.created_at >= ${from}::date)
+          and (${to}::date is null or s.created_at < ${to}::date + 1)
+        order by s.created_at desc, s.id desc
+        limit ${LOG_LIMIT(limit)}
+      `) as Record<string, unknown>[];
+      return {
+        total: totalOf(rows),
+        rows: rows.map((r) => ({
+          id: Number(r.id),
+          uid: String(r.video_uid),
+          deckId: String(r.deck_id),
+          platform: String(r.platform),
+          publishId: r.publish_id ? String(r.publish_id) : null,
+          status: String(r.status),
+          error: r.error ? String(r.error) : null,
+          iteration: Number(r.iteration),
+          tileCount: r.tile_count === null || r.tile_count === undefined ? null : Number(r.tile_count),
+          createdAt: String(r.created_at),
+          settledAt: r.settled_at ? String(r.settled_at) : null,
+          madeAt: r.made_at ? String(r.made_at) : null,
+        })),
+      };
+    },
+    { rows: [], total: 0 },
+  );
+}
+
+// ---------------------------------------------------------------------------
 // The connected account
 // ---------------------------------------------------------------------------
 

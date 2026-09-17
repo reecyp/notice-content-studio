@@ -20,6 +20,8 @@ npm run db:init  # apply the ledger schema to DATABASE_URL (optional)
    and which have not (see `docs/database.md`). Without one, nothing changes.
 5. Or let a schedule do step 3: `POST /api/queue/send` sends the next N unsent decks, oldest
    `createdAt` first, on a shared key rather than a browser session (see `docs/queue-api.md`).
+6. `/log` is the ledger read back: what is queued, what was sent, what failed. 50 rows a tab,
+   filterable by date (see `docs/database.md`).
 
 ## Layout
 
@@ -43,6 +45,7 @@ npm run db:init  # apply the ledger schema to DATABASE_URL (optional)
 | `scripts/check-fonts.mjs` | the face loads and measures as designed |
 | `scripts/check-ledger.mjs` | the ledger SQL, run against a real Postgres in process |
 | `scripts/check-queue.mjs` | the batch endpoint's rules, run against that Postgres and a fake TikTok |
+| `scripts/check-log.mjs` | what the three log tabs claim to be showing, against that same Postgres |
 
 Tiles are drawn on a `<canvas>`, not in the DOM. The schema is entirely pixel geometry (80px inset,
 bottom anchor at y=904, a binary-searched fit pass down to 0.8), and `measureText` gives that

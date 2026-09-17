@@ -7,11 +7,12 @@
     "build": "next build",
     "build:check": "NEXT_DIST_DIR=.next-check next build",
     "start": "next start -p 3210",
-    "check": "tsc --noEmit && node scripts/uid.mjs --check && node scripts/check-fonts.mjs && node scripts/check-layout.mjs && npm run check:db && npm run check:queue",
+    "check": "tsc --noEmit && node scripts/uid.mjs --check && node scripts/check-fonts.mjs && node scripts/check-layout.mjs && npm run check:db && npm run check:queue && npm run check:log",
     "check:db": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/check-ledger.mjs",
     "check:queue": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/check-queue.mjs",
     "uid": "node scripts/uid.mjs",
-    "db:init": "node --env-file-if-exists=.env.local scripts/db-init.mjs"
+    "db:init": "node --env-file-if-exists=.env.local scripts/db-init.mjs",
+    "check:log": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/check-log.mjs"
   },
   "dependencies": {
     "@napi-rs/canvas": "^1.0.9",
