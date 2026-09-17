@@ -7,6 +7,11 @@ wrong.
 **The split:** code owns the grammar (geometry, spacing, measured fit, anchoring). The JSON owns
 the sentence (which blocks, in what order, what words, optional taste overrides).
 
+**What changed in v2.2.** One required field, `createdAt`. It is queue order for the batch send
+and nothing else: no tile reads it and no geometry depends on it. It lives here rather than in the
+database because the database's own `created_at` records when a row first synced, which a reset or
+a re-point stamps identically for every deck at once. See `docs/database.md`.
+
 **What changed in v2.1.** The single blank-line gap split into three constants: `SPACING.title`,
 `SPACING.titleHug` and `SPACING.block`. A title now always carries a margin below it, so `hug` on
 the first body block means tight rather than flush. See "Block gaps" below. No JSON changes.
@@ -27,6 +32,7 @@ line. Derived by measuring the published tiles in `Notice-media/reel-slideshows/
   "schemaVersion": 2,
   "id": "solo-missions",
   "uid": "26689d75-3f94-4413-a476-fa553356697b",
+  "createdAt": "2026-09-15",
   "iteration": 1,
   "format": "paper-note",
   "post": {
@@ -42,6 +48,7 @@ line. Derived by measuring the published tiles in `Notice-media/reel-slideshows/
 | `schemaVersion` | yes | `2`. Lets the site refuse a file it does not understand. |
 | `id` | yes | kebab-case, matches the filename. Drives export filenames and the library list. |
 | `uid` | yes | UUID. Stamped once by `npm run uid` and then never edited: it is the deck's identity in the send ledger, so it survives a rename or a remake while `id` and `iteration` do not. See `docs/database.md`. |
+| `createdAt` | yes | The day the deck was authored. `YYYY-MM-DD`, or a full ISO 8601 instant when two decks made on the same day need a definite order. **This is the queue.** The batch send goes oldest first, so this field alone decides what posts next. |
 | `iteration` | yes | Integer, starts at `1`. Bump on every remake so a redo's downloads never overwrite the previous cut. Filename: `<id>-<NN>-v<iteration>.png`. |
 | `format` | yes | `"paper-note"`. Only value for now; present so a second format is additive. |
 | `post.description` | no | TikTok caption. Plain text, no hashtags inside it. |
@@ -339,6 +346,7 @@ looks subtly wrong. Run both with `npm run check`.
   "schemaVersion": 2,
   "id": "nobody-dares-mess-with",
   "uid": "a4636d51-fdfe-47e4-acc1-b1313bd76b21",
+  "createdAt": "2026-09-15",
   "iteration": 1,
   "format": "paper-note",
   "post": {

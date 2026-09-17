@@ -32,6 +32,12 @@ export default async function Library({
       {banner.tiktok === 'connected' && (
         <div className="note">TikTok account connected. Open a deck to send it.</div>
       )}
+      {banner.tiktok === 'connected-browser-only' && (
+        <div className="note">
+          TikTok account connected for this browser. The session could not be stored, so the batch
+          endpoint cannot post: check <code>DATABASE_URL</code> and connect again.
+        </div>
+      )}
       {banner.tiktok === 'error' && (
         <div className="note bad">TikTok did not connect: {banner.message ?? 'unknown error'}</div>
       )}

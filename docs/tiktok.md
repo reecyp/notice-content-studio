@@ -46,15 +46,30 @@ encrypted, httpOnly cookie. The refresh token is good for a year, so this is a
 once-a-year click. It rotates on use, and `/api/tiktok/publish` writes the
 cookie again whenever TikTok hands back a new one.
 
-Keeping the session in a cookie rather than in a store has a useful side
-effect: only the browser that connected the account can publish, so the studio
-needs no login of its own. `/api/tile` stays open, because TikTok has to reach
-it unauthenticated.
+Keeping the session in a cookie means only the browser that connected the
+account can publish, so the studio needs no login of its own. `/api/tile` stays
+open, because TikTok has to reach it unauthenticated.
 
-The price of that trade is that publishing needs a browser. A cron job, a
-webhook or a `curl` carries no cookie, so nothing server-initiated can post
-today — including a "send the next 10" endpoint. Moving the session into a
-table is what unlocks it; `docs/database.md` covers where that would sit.
+The same sealed session is also written to the `tiktok_session` row, which is
+what lets something without a browser post: `POST /api/queue/send` reads it and
+authorizes on a shared key instead. That is the only caller that uses it, and it
+exists so a scheduled agent can drain the queue. See `docs/queue-api.md`.
+
+Both paths rewrite the session wherever they hold it when TikTok rotates the
+refresh token, because a rotated token spends the old one and whichever copy
+was not updated is the next thing to fail.
+
+## Sending a batch without a browser
+
+`POST /api/queue/send` takes the next N unsent decks, oldest made first, and
+hands them to TikTok one at a time. It needs `QUEUE_API_KEY` set, a
+`DATABASE_URL`, and the account connected once in a browser. Full reference in
+`docs/queue-api.md`.
+
+Two constraints shape it and both come from this page: photo posts land in the
+inbox rather than the feed, so a batch of ten still means ten notifications to
+tap; and 6 requests per minute per token means the endpoint paces itself at
+10.5 seconds a deck rather than firing them together.
 
 ## What the ledger records
 

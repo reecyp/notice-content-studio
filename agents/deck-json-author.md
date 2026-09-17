@@ -87,6 +87,7 @@ looks like a mistake, because it is one.
   "schemaVersion": 2,
   "id": "nobody-dares-mess-with",
   "uid": "a4636d51-fdfe-47e4-acc1-b1313bd76b21",
+  "createdAt": "2026-09-15",
   "iteration": 1,
   "format": "paper-note",
   "post": {
@@ -104,6 +105,11 @@ it. Neither is ever drawn on a tile.
 (`node -e "console.log(crypto.randomUUID())"`) or leave it out and run `npm run uid`, which stamps
 every deck that is missing one. It is what the database rows hang off, so a deck without it will
 not load.
+
+`createdAt` is today's date, `YYYY-MM-DD`, written when the deck is first authored and left alone
+on a remake. It is queue order: the batch send posts the oldest first, so this field is what
+decides when a deck goes out. A deck without it will not load. If two decks written the same day
+need a definite order between them, use a full ISO instant instead of a plain day.
 
 ---
 
@@ -348,6 +354,7 @@ letting the fit pass shrink it.
 ## 10. Before you hand it over
 
 - [ ] `uid` present, and unchanged if this deck already existed.
+- [ ] `createdAt` present, today's date on a new deck, untouched on a remake.
 - [ ] `iteration` bumped if this deck already existed.
 - [ ] Hook count matches the number of numbered points.
 - [ ] Hug is consistent across every tile in the deck.

@@ -25,8 +25,14 @@ export const TOKEN_COOKIE = 'tiktok_session';
 export const STATE_COOKIE = 'tiktok_state';
 
 export class TikTokError extends Error {
-  constructor(message: string, readonly logId?: string) {
+  // Spelled out rather than as a constructor parameter property: Node's
+  // type stripping cannot rewrite those, and scripts/check-queue.mjs imports
+  // this file directly.
+  readonly logId?: string;
+
+  constructor(message: string, logId?: string) {
     super(message);
+    this.logId = logId;
   }
 }
 

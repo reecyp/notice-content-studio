@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import TileCanvas, { loadAssets } from './TileCanvas';
 import { CANVAS, exportName, paintTile, type TileLayout } from '@/lib/render';
 import type { SendState } from '@/lib/db';
+import { describe, inFlight } from '@/lib/send-state';
 import type { Deck } from '@/lib/types';
 
 /** Repaints a tile on a detached canvas so export never depends on what is on screen. */
@@ -122,7 +123,7 @@ export default function DeckViewer({ deck, sent }: { deck: Deck; sent?: SendStat
     }
   };
 
-  const checkStatus = async () => {
+  const checkStatus = useCallback(async () => {
     if (post.kind !== 'sent') return;
     const res = await fetch(`/api/tiktok/status?publish_id=${encodeURIComponent(post.publishId)}`);
     const body = await res.json();
@@ -131,7 +132,26 @@ export default function DeckViewer({ deck, sent }: { deck: Deck; sent?: SendStat
         ? { ...post, status: body.status, failReason: body.failReason }
         : { kind: 'error', message: body.error ?? 'could not read status' },
     );
-  };
+  }, [post]);
+
+  /**
+   * Chase a publish to its conclusion without anyone pressing a button.
+   *
+   * TikTok pulls the tiles on its own schedule, so the status right after a
+   * send is never the final one. Polling stops the moment the status is
+   * terminal, and gives up after two minutes rather than asking forever: the
+   * ledger still learns the outcome on the next page load, and TikTok allows
+   * only 6 requests a minute per token.
+   */
+  useEffect(() => {
+    if (post.kind !== 'sent' || !inFlight(post.status)) return;
+    const started = Date.now();
+    const timer = setInterval(() => {
+      if (Date.now() - started > 120_000) return clearInterval(timer);
+      void checkStatus();
+    }, 5000);
+    return () => clearInterval(timer);
+  }, [post, checkStatus]);
 
   const copy = async (label: string, text: string) => {
     await navigator.clipboard.writeText(text);
@@ -251,11 +271,10 @@ export default function DeckViewer({ deck, sent }: { deck: Deck; sent?: SendStat
               <div style={{ color: 'var(--muted)' }}>publish id</div>
               <div style={{ wordBreak: 'break-all', margin: '2px 0 8px' }}>{post.publishId}</div>
               <div style={{ color: 'var(--muted)' }}>status</div>
-              <div style={{ margin: '2px 0 8px' }}>
-                {post.status}
-                {post.failReason ? ` — ${post.failReason}` : ''}
-              </div>
-              <button onClick={checkStatus}>Refresh status</button>
+              <div style={{ margin: '2px 0 8px' }}>{describe(post.status, post.failReason)}</div>
+              <button onClick={checkStatus}>
+                {inFlight(post.status) ? 'Checking…' : 'Refresh status'}
+              </button>
             </div>
           )}
           {post.kind === 'error' && (

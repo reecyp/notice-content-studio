@@ -1,4 +1,5 @@
 import { neon } from '@neondatabase/serverless';
+import { TERMINAL } from './send-state';
 import type { Deck } from './types';
 
 /**
@@ -61,17 +62,19 @@ export async function syncVideos(decks: Deck[]): Promise<void> {
     'syncVideos',
     async () => {
       await sql`
-        insert into video (uid, deck_id, iteration, tile_count)
+        insert into video (uid, deck_id, iteration, tile_count, made_at)
         select * from unnest(
           ${decks.map((d) => d.uid)}::uuid[],
           ${decks.map((d) => d.id)}::text[],
           ${decks.map((d) => d.iteration)}::int[],
-          ${decks.map((d) => d.tiles.length)}::int[]
+          ${decks.map((d) => d.tiles.length)}::int[],
+          ${decks.map((d) => d.createdAt)}::timestamptz[]
         )
         on conflict (uid) do update set
           deck_id    = excluded.deck_id,
           iteration  = excluded.iteration,
           tile_count = excluded.tile_count,
+          made_at    = excluded.made_at,
           updated_at = now()
       `;
     },
@@ -150,12 +153,13 @@ export async function recordSend(
     async () => {
       await sql.transaction([
         sql`
-          insert into video (uid, deck_id, iteration, tile_count, sent_at)
-          values (${deck.uid}, ${deck.id}, ${deck.iteration}, ${deck.tiles.length}, now())
+          insert into video (uid, deck_id, iteration, tile_count, made_at, sent_at)
+          values (${deck.uid}, ${deck.id}, ${deck.iteration}, ${deck.tiles.length}, ${deck.createdAt}, now())
           on conflict (uid) do update set
             deck_id    = excluded.deck_id,
             iteration  = excluded.iteration,
             tile_count = excluded.tile_count,
+            made_at    = excluded.made_at,
             sent_at    = coalesce(video.sent_at, now()),
             updated_at = now()
         `,
@@ -184,9 +188,9 @@ export async function recordFailedSend(
     async () => {
       await sql.transaction([
         sql`
-          insert into video (uid, deck_id, iteration, tile_count)
-          values (${deck.uid}, ${deck.id}, ${deck.iteration}, ${deck.tiles.length})
-          on conflict (uid) do update set updated_at = now()
+          insert into video (uid, deck_id, iteration, tile_count, made_at)
+          values (${deck.uid}, ${deck.id}, ${deck.iteration}, ${deck.tiles.length}, ${deck.createdAt})
+          on conflict (uid) do update set made_at = excluded.made_at, updated_at = now()
         `,
         sql`
           insert into send (video_uid, platform, status, iteration, tile_count, error, log_id, settled_at)
@@ -215,7 +219,10 @@ export async function settleSend(
 ): Promise<void> {
   const sql = db();
   if (!sql) return;
-  const terminal = status === 'PUBLISH_COMPLETE' || status === 'FAILED';
+  // SEND_TO_USER_INBOX is where a MEDIA_UPLOAD post comes to rest, so it
+  // settles the row. A later PUBLISH_COMPLETE still overwrites the status if
+  // the notification is eventually tapped.
+  const terminal = TERMINAL.includes(status);
   await safely(
     'settleSend',
     async () => {
@@ -245,14 +252,19 @@ export async function settleSend(
 // The queue
 // ---------------------------------------------------------------------------
 
-export type QueuedVideo = { uid: string; deckId: string; iteration: number };
+export type QueuedVideo = { uid: string; deckId: string; iteration: number; madeAt: string | null };
 
 /**
- * The next videos that have never gone out, oldest first.
+ * The next videos that have never gone out, oldest made first.
  *
- * This is the whole of "send the next 10": ask here, then send each one. It
- * reads the registry rather than the disk, so run syncVideos() first if a deck
- * may have been added since the last page load.
+ * This is the whole read side of "send the next 10": ask here, then send each
+ * one. It reads the registry rather than the disk, so run syncVideos() first if
+ * a deck may have been added since the last page load.
+ *
+ * Order is the deck's own `createdAt`, mirrored into made_at, because a row's
+ * created_at only records when this database first heard of the deck. deck_id
+ * breaks the tie between two decks made on the same day, so the queue is stable
+ * across calls rather than left to the planner.
  */
 export async function nextUnsent(limit = 10): Promise<QueuedVideo[]> {
   const sql = db();
@@ -261,19 +273,43 @@ export async function nextUnsent(limit = 10): Promise<QueuedVideo[]> {
     'nextUnsent',
     async () => {
       const rows = (await sql`
-        select uid, deck_id, iteration
+        select uid, deck_id, iteration, made_at
         from video
         where sent_at is null
-        order by created_at asc
+        order by made_at asc nulls last, deck_id asc
         limit ${Math.max(1, Math.min(35, limit))}
       `) as Record<string, unknown>[];
       return rows.map((r) => ({
         uid: String(r.uid),
         deckId: String(r.deck_id),
         iteration: Number(r.iteration),
+        madeAt: r.made_at ? String(r.made_at) : null,
       }));
     },
     [],
+  );
+}
+
+/**
+ * How many videos are waiting.
+ *
+ * The batch send is all or nothing, so it has to know the depth of the queue
+ * before it sends anything. Counting is a separate query from nextUnsent
+ * because the answer it needs is "are there ten", not "which ten".
+ */
+export async function unsentCount(): Promise<number> {
+  const sql = db();
+  if (!sql) return 0;
+  return safely(
+    'unsentCount',
+    async () => {
+      const rows = (await sql`select count(*)::int as n from video where sent_at is null`) as Record<
+        string,
+        unknown
+      >[];
+      return Number(rows[0]?.n ?? 0);
+    },
+    0,
   );
 }
 
@@ -317,4 +353,80 @@ export async function sendLog(limit = 50): Promise<SendLogEntry[]> {
     },
     [],
   );
+}
+
+// ---------------------------------------------------------------------------
+// The connected account
+// ---------------------------------------------------------------------------
+
+/**
+ * The TikTok session, stored so something other than a browser can publish.
+ *
+ * The cookie is still the studio's access model for a person clicking Send: it
+ * is what makes the site need no login of its own. This row is the same session
+ * written down a second time, and it exists for exactly one caller, the batch
+ * endpoint, which arrives with no cookie at all.
+ *
+ * What is stored is the sealed blob, not the tokens. Sealing is lib/tiktok.ts's
+ * job and the key is the client secret, so this file never sees an access token
+ * and a dump of this database is worth nothing without the server's environment.
+ */
+export async function saveSession(sealed: string, openId?: string): Promise<boolean> {
+  const sql = db();
+  if (!sql) return false;
+  return safely(
+    'saveSession',
+    async () => {
+      await sql`
+        insert into tiktok_session (id, open_id, sealed)
+        values (1, ${openId ?? null}, ${sealed})
+        on conflict (id) do update set
+          open_id    = excluded.open_id,
+          sealed     = excluded.sealed,
+          updated_at = now()
+      `;
+      return true;
+    },
+    false,
+  );
+}
+
+export type StoredSession = { sealed: string; openId: string | null; updatedAt: string };
+
+/**
+ * The stored session, or null.
+ *
+ * Null covers every way this can be unusable — no database, no row, an
+ * unreachable host — and every one of them means the same thing to the caller:
+ * nothing server-initiated can publish right now. Failing closed is the only
+ * safe read here, which is why it goes through safely() like the rest.
+ */
+export async function loadSession(): Promise<StoredSession | null> {
+  const sql = db();
+  if (!sql) return null;
+  return safely(
+    'loadSession',
+    async () => {
+      const rows = (await sql`
+        select open_id, sealed, updated_at from tiktok_session where id = 1
+      `) as Record<string, unknown>[];
+      const row = rows[0];
+      if (!row?.sealed) return null;
+      return {
+        sealed: String(row.sealed),
+        openId: row.open_id ? String(row.open_id) : null,
+        updatedAt: String(row.updated_at),
+      };
+    },
+    null,
+  );
+}
+
+/** Forget the connected account. The browser cookie is unaffected. */
+export async function clearSession(): Promise<void> {
+  const sql = db();
+  if (!sql) return;
+  await safely('clearSession', async () => {
+    await sql`delete from tiktok_session where id = 1`;
+  }, undefined);
 }

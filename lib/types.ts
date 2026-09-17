@@ -34,6 +34,15 @@ export type Deck = {
    * The database keys off it; nothing else in the render path reads it.
    */
   uid: string;
+  /**
+   * When the deck was authored. `YYYY-MM-DD`, or a full ISO 8601 instant.
+   *
+   * Queue order, and nothing else: the batch send goes oldest first. It lives
+   * in the JSON rather than in the database because the database's own
+   * created_at is when the row first synced, which a reset or a re-point
+   * flattens into one instant for every deck at once.
+   */
+  createdAt: string;
   iteration: number;
   format: 'paper-note';
   post?: { description?: string; hashtags?: string[] };

@@ -13,6 +13,8 @@ const fail = (where: string, msg: string): never => {
 
 const isStr = (v: unknown): v is string => typeof v === 'string';
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+// A plain day, or a full instant when two decks made on the same day need an order.
+const MADE = /^\d{4}-\d{2}-\d{2}(T\d{2}:\d{2}(:\d{2}(\.\d+)?)?(Z|[+-]\d{2}:\d{2})?)?$/;
 const strArray = (v: unknown, where: string): string[] => {
   if (!Array.isArray(v) || !v.every(isStr)) fail(where, 'expected an array of strings');
   return v as string[];
@@ -122,6 +124,11 @@ export function parseDeck(raw: unknown, filename: string): Deck {
     // deck without one is invisible to the queue rather than merely unlabelled.
     fail(filename, 'uid must be a UUID. Run `npm run uid` to stamp any deck missing one.');
   }
+  if (!isStr(d.createdAt) || !MADE.test(d.createdAt) || Number.isNaN(Date.parse(d.createdAt))) {
+    // The batch send goes oldest first, so a deck with no date has no place in
+    // the queue. Rejecting here keeps that from being discovered at send time.
+    fail(filename, 'createdAt must be a date: "YYYY-MM-DD", or a full ISO 8601 instant');
+  }
   if (typeof d.iteration !== 'number' || d.iteration < 1) {
     return fail(filename, 'iteration must be an integer of 1 or more');
   }
@@ -140,6 +147,7 @@ export function parseDeck(raw: unknown, filename: string): Deck {
     schemaVersion: 2,
     id: d.id,
     uid: (d.uid as string).toLowerCase(),
+    createdAt: d.createdAt as string,
     iteration: d.iteration,
     format: 'paper-note',
     post,

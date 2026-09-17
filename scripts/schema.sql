@@ -38,5 +38,24 @@ create table if not exists send (
 
 create index if not exists send_video_idx on send (video_uid, created_at desc);
 create index if not exists send_publish_idx on send (publish_id);
--- The "next 10 unsent" query, which is the one that has to stay fast.
-create index if not exists video_unsent_idx on video (created_at) where sent_at is null;
+-- Queue order, lifted from the deck's own `createdAt`. Distinct from
+-- created_at above, which is when the row first synced: a reset or a re-point
+-- stamps that identically for every deck at once and the order is gone.
+alter table video add column if not exists made_at timestamptz;
+-- The "next 10 unsent" query, which is the one that has to stay fast. deck_id
+-- is in the index because it breaks the tie between two decks made the same day.
+create index if not exists video_queue_idx on video (made_at, deck_id) where sent_at is null;
+-- Superseded: the queue used to order by created_at.
+drop index if exists video_unsent_idx;
+
+-- The connected TikTok account, so something other than a browser can publish.
+--
+-- One row, always id = 1. The tokens are stored sealed with the same AES-GCM
+-- key as the session cookie (lib/tiktok.ts seal/unseal, keyed on the client
+-- secret), so a dump of this database hands over nothing on its own.
+create table if not exists tiktok_session (
+  id          int primary key default 1 check (id = 1),
+  open_id     text,
+  sealed      text        not null,
+  updated_at  timestamptz not null default now()
+);
